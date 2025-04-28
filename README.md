@@ -1,6 +1,6 @@
 # TCP Echo Server-Client in C
 
-This repository contains a simple **Echo Server-Client** application in Python. The server listens for incoming connections and echoes back any message received from a client. The client connects to the server using a specified IP address and port.
+This repository contains a simple **Echo Server-Client** application in C. The server listens for incoming connections and echoes back any message received from a client. The client connects to the server using a specified IP address and port.
 
 ## Requirements
 
