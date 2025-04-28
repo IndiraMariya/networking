@@ -19,13 +19,13 @@ int main(int argc, char *argv[]){
     struct sockaddr_in echoServAddr;
     unsigned short echoServPort;
     char *servIP;                       // dotted quad (x.x.x.x)
-    char echoString;                    // string to send to ip server
+    char *echoString;                    // string to send to ip server
     char echoBuffer[RCVBUFSIZE];        // buffer for echo string
     unsigned int echoStringLen; 
     int bytesRcvd, totalBytesRcvd;
 
     // check for the right amount of inputs
-    if (argc < 3 || argc > 4){
+    if ((argc < 3) || (argc > 4)){
         fprintf(stderr, "Usage: %s <Server IP> <Echo Word> [<Echo Port>] \n", argv[0]);
         exit(1);
     }
@@ -60,6 +60,8 @@ int main(int argc, char *argv[]){
     
     // receive the same string back from the server
     totalBytesRcvd = 0;
+    bytesRcvd = 0;
+    printf("%d",totalBytesRcvd);
     printf("Received: ");
     while (bytesRcvd < echoStringLen) {
         // receive up to the buffer size - 1 (for null terminator) bytes from the sender
@@ -67,7 +69,7 @@ int main(int argc, char *argv[]){
             DieWithError("recv() failed or connection closed prematurely");
         totalBytesRcvd += bytesRcvd;
         echoBuffer[bytesRcvd] = '\0';
-        printf(echoBuffer);
+        printf("%s", echoBuffer);
     }
 
     printf("\n");   // print a final linefeed
