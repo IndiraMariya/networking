@@ -36,11 +36,14 @@ int main(int argc, char *argv[]){
     if (argc == 4) 
         echoServPort = atoi(argv[3]);
     else 
-        echoServPort = 7; // 7 is a well known port for the echo service
+        echoServPort = 1024; // 7 is a well known port for the echo service
     
     // create a reliable steam socket using TCP
-    if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP) < 0))
+    if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
         DieWithError("socket() failed");
+    }
+
+    printf("1) Client socket creation succeeded.\n");
     
     // construct server address structure
     memset(&echoServAddr, 0, sizeof(echoServAddr));
@@ -48,25 +51,28 @@ int main(int argc, char *argv[]){
     echoServAddr.sin_addr.s_addr = inet_addr(servIP);
     echoServAddr.sin_port = htons(echoServPort);
 
+    int conret = connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr));
     // establish a connection to the echo server
-    if (connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-        DieWithError("connect() failed");
+    if(conret < 0)
+        DieWithError("socket() failed");
+    printf("2) Socket connected to server.\n");
 
     echoStringLen = strlen(echoString);
-    
+
+    int ret = send(sock, echoString, echoStringLen, 0);
+    printf("3) Sent Bytes: %d \n", ret);
     // send the string to the server
-    if (send(sock, echoString, echoStringLen, 0) != echoStringLen)
-        DieWithError("send() sent a different number of bytes than expected");
+    if (ret != echoStringLen)
+        DieWithError("send() sent a different number of bytes than expected\n");
     
     // receive the same string back from the server
     totalBytesRcvd = 0;
     bytesRcvd = 0;
-    printf("%d",totalBytesRcvd);
-    printf("Received: ");
+    printf("4) Received string: ");
     while (bytesRcvd < echoStringLen) {
         // receive up to the buffer size - 1 (for null terminator) bytes from the sender
         if ((bytesRcvd = recv(sock, echoBuffer, RCVBUFSIZE -1, 0)) <= 0)
-            DieWithError("recv() failed or connection closed prematurely");
+            DieWithError("recv() failed or connection closed prematurely\n");
         totalBytesRcvd += bytesRcvd;
         echoBuffer[bytesRcvd] = '\0';
         printf("%s", echoBuffer);

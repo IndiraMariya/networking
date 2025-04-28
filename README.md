@@ -1,41 +1,57 @@
-# Echo Server-Client in Python
+# TCP Echo Server-Client in C
 
 This repository contains a simple **Echo Server-Client** application in Python. The server listens for incoming connections and echoes back any message received from a client. The client connects to the server using a specified IP address and port.
 
 ## Requirements
 
-- Python 3.x (no external libraries needed)
+### Libraries:
+* sys/socket.h (for socket-related functions)
+* arpa/inet.h (for manipulating IP addresses and network protocols)
+* stdio.h (for input/output operations)
+* stdlib.h (for memory allocation and program termination)
+* string.h (for string manipulation)
+* unistd.h (for POSIX functionalities like close())
 
 ## Usage
+>**Tip:** use 1024 as your port to use the default http port.
 
 ### Server
 
 1. Run the server script:
    ```bash
-   python echo_server.py
+   ./TCPEchoServer <PORT>
+   ```
 
 ## Client
-1. Run the client script:
+1. In a new terminal run the client script: 
+   ``` bash
+   ./TCPEchoClient <IP_ADDRESS> <MESSAGE> <PORT>
+   ```
 
-``` bash
-python echo_client.py
-```
-2. Enter the IP address and port of the server when prompted.
+   
 
 ## Example
+* Client Input
+   ```bash 
+   ./TCPEchoClient 127.0.0.1 "Hello TCP"
+   ```
+
+
 * Server Output:
 
-``` bash
-Server listening on port 12345...
-Connection from ('127.0.0.1', 56789) has been established.
-Received message: Hello, Echo Server!
-```
+   ```
+   1) Server socket creation succeeded.
+   2) Socket bind() succeeded.
+   3) Listening for clients.
+   Waiting for client...
+   ```
 * Client Output:
 
-``` bash
-Enter the server IP address: 127.0.0.1
-Enter the port number: 12345
-Received from server: Hello, Echo Server!
-```
+   ```
+   1) Client socket creation succeeded.
+   2) Socket connected to server.
+   3) Sent Bytes: 9
+   4) Received string: Hello TCP
+   ```
 ## License
 [MIT LICENSE](LICENSE)
